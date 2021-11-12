@@ -23,7 +23,7 @@ class bcolors:
     ENDC = '\033[0m'
 
 
-test_files = {}
+rest_files = {}
 
 banner = """
  ______   _______  _______           _______  ______  _________ _______  _______  _______  _______
@@ -127,8 +127,8 @@ def download_file(url):
 def analize_html(url, root_url):
    savepath = download_file(url)
    if savepath is None: return
-   if savepath in test_files: return
-   test_files[savepath] = True
+   if savepath in rest_files: return
+   rest_files[savepath] = True
    print(bcolors.GREEN,"[>>]analize_html =>", url,bcolors.ENDC)
    
 
