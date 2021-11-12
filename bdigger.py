@@ -23,7 +23,7 @@ class bcolors:
     ENDC = '\033[0m'
 
 
-rest_files = {}
+test_files = {}
 
 banner = """
  ______   _______  _______           _______  ______  _________ _______  _______  _______  _______
@@ -81,13 +81,18 @@ def init():
         print(bcolors.GREEN,banner,bcolors.ENDC)
         url = sys.argv[1]
 
-        if "http" not in url:
+        reg = re.search(r"(http.+)",url)
+
+        if reg != None: 
+
+            mode = "sniper"
+        
+        else: 
 
             mode = "craster"
-        
-        else:
-            mode = "sniper"
     
+    del usage,reg
+
     return url,mode
 
 def enum_links(html, base):
@@ -100,6 +105,9 @@ def enum_links(html, base):
       href = a.attrs['href']
       url = urljoin(base, href)
       result.append(url)
+   
+   #del soup,links,href,url
+
    return result
 
 def download_file(url):
@@ -127,8 +135,8 @@ def download_file(url):
 def analize_html(url, root_url):
    savepath = download_file(url)
    if savepath is None: return
-   if savepath in rest_files: return
-   rest_files[savepath] = True
+   if savepath in test_files: return
+   test_files[savepath] = True
    print(bcolors.GREEN,"[>>]analize_html =>", url,bcolors.ENDC)
    
 
@@ -148,10 +156,35 @@ def analize_html(url, root_url):
 
       download_file(link_url)
 
+    #del savepath,html
+
+def claster_bomb(url):
+
+    target_list = url
+
+    f = open(target_list,"r")
+    
+    for i in f:
+        analize_html(i.rstrip("\n"),i.rstrip("\n"))
+
+    
+
+def mode_selector(url,mode):
+
+    if mode == "sniper": 
+        print(bcolors.RED,"[+]Mode: Sniper",bcolors.ENDC)
+        analize_html(url,url)
+    
+    else:
+        print(bcolors.RED,"[+]Mode: Craster",bcolors.ENDC)
+        claster_bomb(url)
+        
+
 def main():
 
     url,mode = init()
-    analize_html(url,url)
+    mode_selector(url,mode)
+    #analize_html(url,url)
 
 
 if __name__ == "__main__":
