@@ -12,7 +12,6 @@ import time
 import re
 import sys
 
-
 class bcolors:
 
     BLUE = '\033[94m'
@@ -21,7 +20,6 @@ class bcolors:
     YELLOW = '\033[93m'
     FAIL = '\033[91m'
     ENDC = '\033[0m'
-
 
 test_files = {}
 
@@ -57,17 +55,17 @@ def init():
     
 
     usage = """
------------------------------------------
-[+]Usage:
-    {arg0} <Target_URL>
-            or
-    {arg0} <Target_List file>
-
-[+]Example:
-    {arg0} http://target_site.com/
-            or
-    {arg0} target_list.txt
------------------------------------------------    
+----------------------------------------------------------
+         +-----+        [+]Usage: 
+         |     |            {arg0} <Target_URL>
+   +-----+     +-----+            or
+   |                 |      {arg0} <Target_List File>
+   +-----+     +-----+
+         |     |        [+]Example:
+         |     |            {arg0} http://target_site.com/
+         |     |                  or
+         |     |            {arg0} target_list.txt
+---------+     +-------------------------------------------
 """
     usage = usage.replace("{arg0}",sys.argv[0])
 
@@ -80,7 +78,6 @@ def init():
     else:
         print(bcolors.GREEN,banner,bcolors.ENDC)
         url = sys.argv[1]
-
         reg = re.search(r"(http.+)",url)
 
         if reg != None: 
@@ -92,7 +89,6 @@ def init():
             mode = "craster"
     
     del usage,reg
-
     return url,mode
 
 def enum_links(html, base):
@@ -161,13 +157,11 @@ def analize_html(url, root_url):
 def claster_bomb(url):
 
     target_list = url
-
+    format_checker(target_list)
     f = open(target_list,"r")
     
     for i in f:
         analize_html(i.rstrip("\n"),i.rstrip("\n"))
-
-    
 
 def mode_selector(url,mode):
 
@@ -178,14 +172,24 @@ def mode_selector(url,mode):
     else:
         print(bcolors.RED,"[+]Mode: Craster",bcolors.ENDC)
         claster_bomb(url)
-        
 
+def format_checker(target_list):
+
+    f = open(target_list,"r")
+    
+    for i in f:
+        if "http" not in i:
+            print(bcolors.RED,"[!]Not A Link List",bcolors.ENDC)
+            sys.exit()
+    
+    else:
+
+        del f
+        
 def main():
 
     url,mode = init()
     mode_selector(url,mode)
-    #analize_html(url,url)
-
-
+    
 if __name__ == "__main__":
    main()
