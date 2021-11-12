@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import os.path
-
+from bs4 import BeautifulSoup as bs4
 from os import makedirs
 import re
 import sys
