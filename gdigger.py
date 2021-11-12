@@ -24,9 +24,10 @@ class bcolors:
 test_files = {}
 
 banner = """
- ____  _____  ___  __ __ _____ _____ __  ____   ____  _____ _____ 
-(( ___ ||_// ||=|| \\ // ||==  ||  ) || (( ___ (( ___ ||==  ||_// 
- \\_|| || \\ || ||  \V/  ||___ ||_// ||  \\_||  \\_|| ||___ || \\
+ ____  _____  ___  __ __ _____ _____ __  ____   ____  _____ _____
+(( ___ ||_// ||=|| \\\ // ||==  ||  ) || (( ___ (( ___ ||==  ||_//
+ \\\_|| || \\\ || ||  \V/  ||___ ||_// ||  \\\_||  \\\_|| ||___ || \\\
+
  ____,
 /.---|
 `    |     ___      __________
@@ -129,12 +130,19 @@ def analize_html(url, root_url):
    if savepath in test_files: return
    test_files[savepath] = True
    print(bcolors.GREEN,"[>>]analize_html =>", url,bcolors.ENDC)
-   
 
-   html = open(savepath, "r", encoding="utf-8").read()
-   #html = open(savepath, "r", encoding="CP932").read()
-   #html = open(savepath, "r", encoding="Shift_JIS").read()
-   #html = open(savepath, "r", encoding="EUC-JIS").read()
+   try:
+       html = open(savepath, "r", encoding="utf-8").read()
+
+   except:
+
+       html = open(savepath, "r", encoding="CP932").read()
+   
+   #except:
+   #    html = open(savepath, "r", encoding="Shift_JIS").read()
+   
+   #except:
+   #    html = open(savepath, "r", encoding="EUC-JIS").read()
 
    links = enum_links(html, url)
    for link_url in links:
@@ -153,8 +161,12 @@ def claster_bomb(url):
 
     target_list = url
     format_checker(target_list)
-    f = open(target_list,"r")
-    
+    try:
+        f = open(target_list,"r")
+    except:
+        print(bcolors.RED,"[!]Some Exception Occured",bcolors.ENDC)
+        sys.exit()
+
     for i in f:
         analize_html(i.rstrip("\n"),i.rstrip("\n"))
 
@@ -170,8 +182,12 @@ def mode_selector(url,mode):
 
 def format_checker(target_list):
 
-    f = open(target_list,"r")
-    
+    try:
+        f = open(target_list,"r")
+    except:
+        print(bcolors.RED,"[!]Some Exception Occured",bcolors.ENDC)
+        sys.exit()
+
     for i in f:
         if "http" not in i:
             print(bcolors.RED,"[!]Not A Link List",bcolors.ENDC)
