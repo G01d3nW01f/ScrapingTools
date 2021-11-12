@@ -47,6 +47,8 @@ banner = """
 """
 
 
+
+
 def init():
     
 
@@ -87,6 +89,9 @@ def init():
     del usage,reg
     return url,mode
 
+
+
+
 def enum_links(html, base):
    soup = BeautifulSoup(html, "html.parser")
    links = soup.select("link[rel='stylesheet']")
@@ -101,6 +106,10 @@ def enum_links(html, base):
    #del soup,links,href,url
 
    return result
+
+
+
+
 
 def download_file(url):
    o = urlparse(url)
@@ -124,6 +133,9 @@ def download_file(url):
        print(bcolors.RED,"[!]Download Failed:", url,bcolors.ENDC)
        return None
 
+    
+    
+    
 def analize_html(url, root_url):
    savepath = download_file(url)
    if savepath is None: return
@@ -157,10 +169,12 @@ def analize_html(url, root_url):
 
     #del savepath,html
 
+    
+    
 def claster_bomb(url):
 
     target_list = url
-    format_checker(target_list)
+    
     try:
         f = open(target_list,"r")
     except:
@@ -170,6 +184,8 @@ def claster_bomb(url):
     for i in f:
         analize_html(i.rstrip("\n"),i.rstrip("\n"))
 
+        
+        
 def mode_selector(url,mode):
 
     if mode == "sniper": 
@@ -180,23 +196,7 @@ def mode_selector(url,mode):
         print(bcolors.RED,"[+]Mode: Craster",bcolors.ENDC)
         claster_bomb(url)
 
-def format_checker(target_list):
-
-    try:
-        f = open(target_list,"r")
-    except:
-        print(bcolors.RED,"[!]Some Exception Occured",bcolors.ENDC)
-        sys.exit()
-
-    for i in f:
-        if "http" not in i:
-            print(bcolors.RED,"[!]Not A Link List",bcolors.ENDC)
-            sys.exit()
-    
-    else:
-
-        del f
-        
+     
 def main():
 
     url,mode = init()
@@ -204,3 +204,5 @@ def main():
     
 if __name__ == "__main__":
    main()
+
+
