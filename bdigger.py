@@ -12,6 +12,17 @@ import time
 import re
 import sys
 
+
+class bcolors:
+
+    BLUE = '\033[94m'
+    GREEN = '\033[92m'
+    RED = '\033[31m'
+    YELLOW = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+
+
 test_files = {}
 
 banner = """
@@ -43,32 +54,31 @@ banner = """
 
 
 def init():
-
-    print(banner)
+    
 
     usage = """
-
+-----------------------------------------
 [+]Usage:
     {arg0} <Target_URL>
             or
     {arg0} <Target_List file>
 
 [+]Example:
-
     {arg0} http://target_site.com/
             or
     {arg0} target_list.txt
-
+-----------------------------------------------    
 """
+    usage = usage.replace("{arg0}",sys.argv[0])
 
     if len(sys.argv) != 2:
         
-        print("[!]NeedMoreArgument!!!!!!")
-        print(usage)
+        print(bcolors.RED,"[!]NeedMoreArgument!!!!!!")
+        print(usage,bcolors.ENDC)
         sys.exit()
 
     else:
-
+        print(bcolors.GREEN,banner,bcolors.ENDC)
         url = sys.argv[1]
 
         if "http" not in url:
@@ -102,16 +112,16 @@ def download_file(url):
    if os.path.exists(savepath): return savepath
 
    if not os.path.exists(savedir):
-      print("mkdir=", savedir)
+      print(bcolors.BLUE,"[+]MakeDirectory => ", savedir,bcolors.ENDC)
       makedirs(savedir)
 
    try:
-      print("download=", url)
+      print(bcolors.YELLOW,"[+]download => ", url,bcolors.ENDC)
       urlretrieve(url, savepath)
       time.sleep(1)
       return savepath
    except:
-       print("[!]Download Failed:", url)
+       print(bcolors.RED,"[!]Download Failed:", url,bcolors.ENDC)
        return None
 
 def analize_html(url, root_url):
@@ -119,7 +129,7 @@ def analize_html(url, root_url):
    if savepath is None: return
    if savepath in test_files: return
    test_files[savepath] = True
-   print("analize_html=", url)
+   print(bcolors.GREEN,"[>>]analize_html =>", url,bcolors.ENDC)
    
 
    html = open(savepath, "r", encoding="utf-8").read()
