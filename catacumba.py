@@ -6,6 +6,8 @@ import re
 import sys
 import subprocess
 from bs4 import BeautifulSoup as bs4
+import datetime
+import logging
 
 class bcolors:
 
@@ -57,7 +59,7 @@ def init():
             .---.       {arg0} <TargetDirectory> <KeyWordList>
        '-.  |   |  .-'    
          ___|   |___    [+]First.... capture the dir and files with gdigger.py to target_site
-        [           ]   [+]Step2.... this script run aim to captured 
+        [           ]   [+]Step2.... this script run aim to captured into directory
         `---.   .---'   
      __||__ |   | __||__[!]Example:
      '-..-' |   | '-..-'
@@ -82,164 +84,178 @@ def init():
 
         print(bcolors,"[!]Some Exception Occured!!!!",bcolors.ENDC)
         sys.exit()
-
-    while True:
-        keyword_list.remove("")
-            
-        if "" not in keyword_list:
-            break
     
     list_attack_flag = subprocess.getoutput(f"file {target_dir}")
     
     absolute_path = os.getcwd()
-    #os.chdir(target_dir)
-    print(bcolors.BLUE,banner,bcolors.ENDC)
     
     if "directory" not in list_attack_flag:
         print(bcolors.RED,"[*]List_Attack",bcolors.ENDC)
         signal = "List"
-
+        print(bcolors.GREEN,banner,bcolors.ENDC)
     else:
         print(bcolors.RED,"[*]Single_Attack",bcolors.ENDC)
         signal = "Single"
-        os.chdir(target_dir)
+        print(bcolors.GREEN,banner,bcolors.ENDC)
+       
+    return signal
+#######################################
+# This Function is For Only Debugging #
+#######################################
 
-    return absolute_path,keyword_list,signal
+def dbg():
+    print(bcolors.RED,"[!]DBG!!!!!!!!!!!!!")
+    print(bcolors.RED,"->",inspect.currentframe().f_lineno,bcolors.ENDC)
+
+
+
+def args_take_off():
+
+    targets = sys.argv[1]
+    keyword = sys.argv[2]
+
+    return targets,keyword
+
+
+
+def make_directory():
+
+    new_dir = str(datetime.datetime.now()).replace(" ","").replace("-","").replace(":","").replace(".","")[:14]
     
-   
-def get_list(absolute_path):
+    try:
+        os.system(f"mkdir {new_dir}")
+    except:
+        print(bcolors.RED,"[+]AlreadyExitsts",bcolors.ENDC)
+        pass
+
+    full_path_of_new_directory = os.getcwd()+"/"+new_dir+"/"
+    print(bcolors.BLUE,"[+]NewDirectoryCreated For Report",bcolors.ENDC)
+    print(bcolors.YELLOW,full_path_of_new_directory,bcolors.ENDC)
     
-    current_directory = os.getcwd()
+    return full_path_of_new_directory
 
-    all_dir = subprocess.getoutput(f"find {current_directory} -type d 2> /dev/null")
-    all_dir = all_dir.rsplit("\n")
 
-    #print(bcolors.GREEN,"[+]All_Directory....",bcolors.ENDC)
+def dir_recon(targets,keywords,full_path_of_new_directory):
+     
+    curr_dir = os.getcwd()    
+    target_full_path = subprocess.getoutput(f"find {curr_dir} -name {targets} -type d 2> /dev/null")
+    print(bcolors.GREEN,f"[>]FullPathOfTarget: {target_full_path}",bcolors.ENDC)
     
-    for i in all_dir:
-        i = i.replace(absolute_path,"")
-        #print(bcolors.BLUE,i,bcolors.ENDC)
+    target_file_full_path = subprocess.getoutput(f"find {target_full_path} -type f 2> /dev/null")
+    #print(bcolors.BLUE,f"{target_file_full_path}",bcolors.ENDC)
     
-    del all_dir,i 
-    return current_directory
-
-
-def file_path(current_directory,absolute_path):
-
-    all_file = subprocess.getoutput(f"find {current_directory} -type f 2> /dev/null")
-    all_file = all_file.rsplit("\n")
-
-    print(bcolors.GREEN,"[+]founded_file:",bcolors.ENDC)
-    
-    for i in all_file:
-        i = i.replace(absolute_path,"")
-        print(bcolors.BLUE,i,bcolors.ENDC)
-
-    return all_file
-
-def counter(all_file,keyword_list):
-    
-    dic = {}
-    print(bcolors.GREEN,"[+]KeyWordList: ",bcolors.ENDC)
-    print(bcolors.YELLOW,keyword_list,bcolors.ENDC)
-    for i in keyword_list:
-        dic[i] = 0
-    
-    #print(dic)
-
-    for i in all_file:
-        
-        f = open(i,"r")
-
+    target_file_full_path = target_file_full_path.rsplit("\n") 
+    while True:
         try:
+            target_file_full_path.remove("")
+            if "" not in target_file_full_path:
+                break
+        except:
+            break
+
+    print(bcolors.RED,"[>]AllTargetFiles ",bcolors.ENDC)
+    for i in target_file_full_path:
+        print(bcolors.WHITE,i,bcolors.ENDC)
+   
+    f = open(keywords,"r")
+    keywords_list = f.read().rsplit("\n")
+
+    while True:
+        try:
+            keywords_list.remove("")
+            if "" not in keywords_list:
+                break
+        except:
+            break
+
+    #target_file_full_path => array of the file and not a directory for crawling
+    #keywors_list => array of the keyword for searching
+
+    dictio = {}
+
+    for i in keywords_list:
+        dictio[i] = 0
+
+    for i in target_file_full_path:
+        
+        try:
+            f = open(i,"r")
             soup = bs4(f,"html.parser")
-            #print(soup.text)
-            
-            for i in keyword_list:
-                
+            for i in keywords_list:
                 pointer = soup.text.count(i)
-                dic[i]+=pointer
-    
+                dictio[i]+=pointer
         except:
             pass
-    
-    for i in keyword_list:
-        
-        if dic[i] == 0:
-            print(bcolors.RED,f"{i} --> {dic[i]}",bcolors.ENDC)
-        
-        elif dic[i] > 9:
-            print(bcolors.WHITE,f"{i} --> {dic[i]}",bcolors.ENDC)
 
+    #print(dictio)
+    
+    dir_name = full_path_of_new_directory+targets
+    
+    #print(dir_name)
+
+    report_f = open(dir_name,"w")
+
+    for i in dictio:
+        report_f.write(str(i)+","+str(dictio[i])+"\n")
+        
+        if dictio[i] == 0:
+            print(bcolors.RED,f"{i} --> {dictio[i]}",bcolors.ENDC)
+        elif dictio[i] > 9:
+            print(bcolors.BLUE,f"{i} --> {dictio[i]}",bcolors.ENDC)
         else:
-            print(bcolors.BLUE,f"{i} --> {dic[i]}",bcolors.ENDC)
-        
-    return keyword_list,dic
-
-def report_manager(absolute_path,current_directory):
-
-    file_dir = current_directory.replace(absolute_path,"")
-    file_dir = file_dir.replace("/","report.")
+            print(bcolors.GREEN,f"{i} --> {dictio[i]}",bcolors.ENDC)
     
-    print(bcolors.YELLOW,f"Write to: {file_dir}",bcolors.ENDC)
-    print(bcolors.YELLOW,f"FullPath: {current_directory}"+"/"+f"{file_dir}",bcolors.ENDC)
+    report_f.close()
 
-    return file_dir
 
-def processing(keyword_list,dic,file_dir):
+def target_to_targets(targets):
 
-    f = open(file_dir,"w")
-    f.write(file_dir.replace("report.","")+"\n")
-    for i in keyword_list:
 
-        f.write(i+","+str(dic[i])+"\n")
-
-    f.close()
-    #os.system(f"cat {file_dir}")
-
-def list_cutter(keyword_list):
+    checker = subprocess.getoutput(f"file {targets}")
+    if "directory" not in checker:
+        print("clear")
     
-    target_list = sys.argv[1]
-    f = open(target_list,"r")
-    target_list = f.read().split("\n")
+    f = open(targets,"r")
+    targets = f.read().rsplit("\n")
+    
+    
     while True:
-        target_list.remove("")
-        if "" not in target_list:
+        try:
+            targets.remove("")
+            if "" not in targets:
+                break
+        except:
             break
-    current_dir = os.getcwd()
-    for i in target_list:
 
-        specify_dir_name = subprocess.getoutput(f"find {current_dir} -type d -name {i} 2>/dev/null")
-        print(specify_dir_name)
+    return targets 
+
+def list_attacking():
     
-
+    targets,keyword = args_take_off()
+    full_path_of_new_directory = make_directory()
+    target_array = target_to_targets(targets)
+    #print(target_array)
     
+    for i in target_array:
+        
+        dir_recon(i,keyword,full_path_of_new_directory)
+    
+     
+def single_attacking():
 
-
+    targets,keyword = args_take_off()
+    full_path_of_new_directory = make_directory()
+    dir_recon(targets,keyword,full_path_of_new_directory)
 
 def main():
+    signal = init()
+     
+    if signal == "List":
+        list_attacking()
 
-    absolute_path,keyword_list,signal = init()
-    
-    if signal == "Single":
-
-        current_directory = get_list(absolute_path)
-        all_file = file_path(current_directory,absolute_path)
-        keyword_list,dic = counter(all_file,keyword_list)
-        file_dir = report_manager(absolute_path,current_directory)
-        processing(keyword_list,dic,file_dir)
-
-    else:
-
-        list_cutter(keyword_list)
-        
-        
-
-#######################################################
-# MainFunction is not write for some implementation   #
-# why? beacuse I can not management god damn function #  
-#######################################################
-
+    elif signal == "Single":        
+        single_attacking()
+   
 if __name__ == "__main__":
 
     main()
