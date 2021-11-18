@@ -1,6 +1,16 @@
 # Clone the Target Site.
 ##  use the useful module: pywebcopy
 
+
+why I have to tried the programming to web clone? 
+let me use the fucking useful module please.
+
+if that's not there, I will give up and make by my self
+
+however now that is here, 
+okay stop the wank, go back the job 
+
+
 LINK: https://www.geeksforgeeks.org/how-to-clone-webpage-using-pywebcopy-in-python/
 
 ```
