@@ -188,7 +188,7 @@ def targets_to_target(target):
 
 def report_manager(target):
     
-    dir_name = "report_mail_and_phone_"+str(datetime.datetime.now())[:14].replace(" ","").replace(":","")
+    dir_name = "report_mail_and_phone_"+str(datetime.datetime.now()).replace(" ","").replace(":","").replace(".","")[9:]
     os.mkdir(dir_name)
     finalize_dir_name = dir_name+"/"+target+"_report"
     #print(finalize_dir_name)
