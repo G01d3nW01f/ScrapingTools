@@ -1,7 +1,38 @@
+
+#I thought 
+    scrape the web site and clone it
+    after the analysis the html for link and scripts or information from CMS and versions and more....
+    
+    So I thought web_page clone or copy and these into directory_file.
+    
+```
+                    +---------------+
+<Target WebSite>    |WebSite <clone>|                            ------------------------
+                    +---------------+              +-----+       |      Anlysis  
+                            |              +-------|Page1|-----<html>   Search
+                      +-----------+        |       +-----+       |      Compare
+                      |directory 1|--------+                     |      ExtractLink
+                      +-----------+        |       +-----+       |      ......
+                            |              +-------|Page2|-----<html>
+                            |                      +-----+       |
+                            |                      +-----+       |
+                            |              +-------|Page1|-----<html>
+                      +-----------+        |       +-----+       |
+                      |directory 2|--------+                     |
+                      +-----------+        |       +-----+       |
+                                           +-------|Page2|-----<html>
+                                                   +-----+       |------------------------
+
+```                                                               
+
+
 # GraveDigger
   scraping and crawling tool.
   download the target site's html to local,
   and make folder in depending on the depth with crawl
+  
+  however this script is not useful!!!!!!!!!!
+  
   
  ```
  $ ./gdigger.py https://webscraper.io/test-sites/                 
