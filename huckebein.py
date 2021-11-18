@@ -5,6 +5,7 @@ import subprocess
 import sys
 from bs4 import BeautifulSoup as bs4
 import datetime
+import re
 
 class bcolors:
 
@@ -56,18 +57,18 @@ banner = """
 """
 
 def init():
-    current_dir = os.getcwd() 
-    if len(sys.argv) != 3:
+    #current_dir = os.getcwd() 
+    if len(sys.argv) != 2:
         print(bcolors.RED,"[!]Need More Argument",bcolors.ENDC)
         usage = """
 +------------------------------------------- - -- -- -- - - ---- -  --
 | +------------------+   [+]Usage:                                             
 | |       ___        |                                            
-| |   _  (,~ |   _   |      {arg0} <target_directory_list> <keyword_list>     
+| |   _  (,~ |   _   |      {arg0} <target_directory_name(cloned)>    
 | |  (____/  |____)  |                                               
 | |  |||||    |||||  |   [+]Example:
 | |  |||||    |||||  |      
-| |  |||||\  /|||||  |      {arg0} directory_list keyword.txt 
+| |  |||||\  /|||||  |      {arg0} target.com.cloned
 | |  |||'//\/\\\`|||  |                                               
 | |  |' m' /\ `m `|  |                                               
 | |       /||\       |                                               
@@ -80,162 +81,130 @@ def init():
         sys.exit()
 
     else:
-        print("[+]CLEAR")
+        print(bcolors.BLUE,"[+]CLEAR",bcolors.ENDC)
         
         if "directory" in subprocess.getoutput(f"file {sys.argv[1]}"):
 
             signal = "single"
             print(bcolors.GREEN,banner,bcolors.ENDC)
-            return signal,current_dir
+            target = sys.argv[1]
+            return signal,target
         
         else:
             signal = "list"
             print(bcolors.RED,banner,bcolors.ENDC)
-            return signal,current_dir
+            target = sys.argv[1]
+            return signal,target
 
-    ##############################################################
-    ## below functions are processing the list of multi target. ##
-    ## took the first arguments if that are target_list,        ##
-    ## then find the all list of full path.                     ##
-    ## and that's list is into array and will return            ##
-    ##############################################################
+def into_the_arena(target):
+    
+    dir_path = os.getcwd()+"/"+target
+    all_file_list = subprocess.getoutput(f"find {dir_path} -type f 2> /dev/null")
+    all_file_list = all_file_list.rsplit("\n")
+    while True:
+        try:
+            all_file_list.remove("")
+            if "" not in all_file_list:
+                break
+        except:
+            break
+
+    email_address_list = []
+    phone_or_fax_list  = []
+    print(bcolors.GREEN,f"[+]Target: {target}",bcolors.ENDC)
+    
+    for i in all_file_list:
+
+        f = open(i,"r")
+        soup = bs4(f,"html.parser")
         
-def target_list():
+        reg = re.search(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b",soup.text)
+        if reg != None:
+            email_address_list.append(reg.group())      
+            print(bcolors.BLUE,f"{i} -->"+bcolors.GREEN,f"Detected email_address:{bcolors.WHITE}[{reg.group()}]",bcolors.ENDC)
     
-    current_dir = os.getcwd()
-    targets = sys.argv[1]
-    f = open(targets,"r")
-    target_list = f.read().split("\n") 
+        else:
+            print(bcolors.RED,f"{i} --> NotDetected...",bcolors.ENDC)
 
+        reg = re.search(r"\b\d{2,4}[-]\d{2,4}[-]\d{2,4}",soup.text)
+        if reg != None:
+            phone_or_fax_list.append(reg.group())
+            print(bcolors.BLUE,f"{i} -->"+bcolors.GREEN,f"Detected phone_or_fax number:{bcolors.WHITE}[{reg.group()}]",bcolors.ENDC)
+        
+        else:
+            print(bcolors.RED,f"{i} --> NotDetected...",bcolors.ENDC)
+
+
+    email_address_list =  set(email_address_list)
+    email_address_list = list(email_address_list)
+    phone_or_fax_list  =  set(phone_or_fax_list)
+    phone_or_fax_list  = list(phone_or_fax_list)
+   
+    
+
+    empty_ascii_art = """
+  _______  ___      ___    _______  ___________  ___  ___  
+ /"     "||"  \    /"  |  |   __ "\("     _   ")|"  \/"  | 
+(: ______) \   \  //   |  (. |__) :))__/  \\\__/  \   \  /  
+ \/    |   /\\\  \/.    |  |:  ____/     \\\_ /     \\\  \/   
+ // ___)_ |: \.        |  (|  /        |.  |      /   /    
+(:      "||.  \    /:  | /|__/ \       \:  |     /   /     
+ \_______)|___|\__/|___|(_______)       \__|    |___/      
+                                                           
+    """
+    if len(email_address_list) == 0 and len(phone_or_fax_list) == 0:
+        print(bcolors.RED,"[!]Not Detected, or Target has been there...",bcolors.ENDC)
+        print(bcolors.RED,f"{empty_ascii_art}",bcolors.ENDC)
+    else:
+        print(email_address_list)
+        print(phone_or_fax_list)
+
+    finalize_dir_name = report_manager(target)
+    
+    f = open(finalize_dir_name+"_email_phone_FAX","w")
+    
+    for i in email_address_list:
+        f.write("email : "+i+"\n")
+    for i in phone_or_fax_list:
+        f.write("number: "+i+"\n")
+
+    f.close()
+
+    print(bcolors.GREEN,"[+]Report Logging Done >>"+bcolors.BLUE,f"{finalize_dir_name}_email_phone_FAX",bcolors.ENDC)
+
+def targets_to_target(target):
+    
+    f = open(target,"r")
+    target_list = f.read().rsplit("\n")
     while True:
-        target_list.remove("")
-        if "" not in target_list:
+        try:
+            target_list.remove("")
+            if "" not in target_list:
+                break
+        except:
             break
 
-    full_path_list = []
+    return target_list
+
+def report_manager(target):
     
-    for i in target_list:
-        #print(i)
-        s = subprocess.getoutput(f"find {current_dir} -name {i} -type d 2> /dev/null")
-        full_path_list.append(s)
+    dir_name = "report_mail_and_phone_"+str(datetime.datetime.now())[:14].replace(" ","").replace(":","")
+    os.mkdir(dir_name)
+    finalize_dir_name = dir_name+"/"+target+"_report"
+    #print(finalize_dir_name)
 
-    #print(full_path_list)
-    return full_path_list
+    return finalize_dir_name
 
-
-    ###########################################
-    # the functions for the SingleTarget mode #
-    # but system is similar as list attacking #
-    ###########################################
-
-
-def target_path():
-
-    current_dir = os.getcwd()
-    target = sys.argv[1]
-    
-    try: 
-        full_path = subprocess.getoutput(f"find {current_dir} -name {target} -type d 2> /dev/null")
-    except:
-        print(bcolors.RED,f"[!]SomeExceptionOccured",bcolors.ENDC)
-        sys.exit()
-
-    full_path_list = [full_path]
-    #print(full_path_list)
-    return full_path_list
-
-
-######################################
-# For modules that some little works #
-######################################
-
-def make_directory(): 
-    
-    array = [" ",",","-",":"]
-    test_dir = str(datetime.datetime.now())
-
-    for i in array:
-        test_dir = test_dir.replace(i,"_")
-    
-    os.mkdir(test_dir)
-    
-    abs_path = os.getcwd()+"/"+test_dir+"/"
-    #print(abs_path)
-     
-
-    return abs_path
-
-
-
-def count_keywords():
-
-    counter = {}
-    keyword_list = sys.argv[2]
-    try:
-        f = open(keyword_list,"r")
-    except:
-        print(bcolors.RED,"[!]Keyword list file is Invalid",bcolors.ENDC)
-        sys.exit()
-    key_words = f.read().split("\n")
-     
-    while True:
-        key_words.remove("")
-        if "" not in key_words:
-
-            break
-    
-    for i in key_words:
-        counter[i] = 0
-       
-    return key_words,counter
-
-
-def aiming(full_path_list,current_dir):
-    
-    abs_path = make_directory()
-    print(bcolors.BLUE,abs_path,bcolors.ENDC)
-
-    for i in full_path_list:
-        key_words,counter = count_keywords()   
-        root_path = i.replace(current_dir,"").replace("/","")
-        print(bcolors.BLUE,root_path,bcolors.ENDC)
-        dirs = subprocess.getoutput(f"find {i} -type f 2> /dev/null")
-        dirs = dirs.rsplit("\n")    
-        f = open(abs_path+"/"+root_path,"w")
-
-        for i in dirs:
-            f2 = open(i,"r")
-            
-            try:
-                soup = bs4(f2,"html.parser")
-                for i in key_words:
-
-                    pointer = soup.text.count(i)
-                    counter[i]+=pointer
-                
-                for i in counter:
-
-                    f.write(f"{i} -> {counter[i]}"+"\n")
-                f.close()
-
-            except:
-                pass
-                                
 def main():
-
-    signal,current_dir = init()
+    signal,target = init()
     
-    if signal == "list":
-        full_path_list = target_list()
-
-    elif signal == "single":
-        full_path_list = target_path()
-
-    #make_directory()
-    #counter()
+    if signal == "single":
+        into_the_arena(target)
     
-    aiming(full_path_list,current_dir)
+    elif signal == "list":
+        target_list =  targets_to_target(target)
+        for i in target_list:
+            into_the_arena(i)
 
 if __name__ == "__main__":
-
     main()
