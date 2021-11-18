@@ -27,7 +27,6 @@ banner = """
  ____  _____  ___  __ __ _____ _____ __  ____   ____  _____ _____
 (( ___ ||_// ||=|| \\\ // ||==  ||  ) || (( ___ (( ___ ||==  ||_//
  \\\_|| || \\\ || ||  \V/  ||___ ||_// ||  \\\_||  \\\_|| ||___ || \\\
-
  ____,
 /.---|
 `    |     ___      __________
@@ -47,11 +46,8 @@ banner = """
 """
 
 
-
-
 def init():
     
-
     usage = """
 ----------------------------------------------------------
          +-----+        [+]Usage: 
@@ -79,18 +75,17 @@ def init():
         reg = re.search(r"(http.+)",url)
 
         if reg != None: 
-
             mode = "sniper"
-        
         else: 
-
             mode = "craster"
-    
+       
+        reg = re.search(r"[/]$",url)
+        if reg == None:
+            url = url+"/"
+        print(url)
+
     del usage,reg
     return url,mode
-
-
-
 
 def enum_links(html, base):
    soup = BeautifulSoup(html, "html.parser")
@@ -204,5 +199,3 @@ def main():
     
 if __name__ == "__main__":
    main()
-
-
