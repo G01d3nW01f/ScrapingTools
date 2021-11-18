@@ -1,9 +1,9 @@
 
-#I thought 
+#   I thought 
     scrape the web site and clone it
     after the analysis the html for link and scripts or information from CMS and versions and more....
     
-    So I thought web_page clone or copy and these into directory_file.
+   So I thought web_page clone or copy and these into directory_file.
     
 ```
                     +---------------+
