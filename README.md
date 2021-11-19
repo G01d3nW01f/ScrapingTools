@@ -31,7 +31,8 @@
   download the target site's html to local,
   and make folder in depending on the depth with crawl
   
-  however this script is not useful!!!!!!!!!!
+  however this script is not really useful!!!!!!!!!!
+  need more improve like a japanese politics
   
   
  ```
