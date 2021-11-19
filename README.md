@@ -146,7 +146,7 @@
                       
 ```
 
-This Script is wrote for clone file for targetting web sites.
+This Script is wrote for generated clone file for targetting web sites.
 but if you can make more better clone, then please tell me, and give me, 
 ofcourse I will use it.
 
