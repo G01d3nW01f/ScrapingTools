@@ -194,10 +194,12 @@ by the way, any this tool find the keywords in every page and text,
                     
  //..._././/..//./ .//.. .. . /// ./../../// // /../.. . /..../ ../ /.
  ```
- Huckebein is are email_address find tool, ofcourse this tool too for downloaded clone file of targetted web site.
+ Huckebein is are email address find tool, ofcourse this tool for downloaded clone file of targetted web site.
  information gathering is fun? oh my god, you gotta be a NSA agents.
  
- and this tool can detection to phone number but japan rule only, why?? Because Holy shit I don't know about the phone number rules of all over the fucking world!!!!!!!
+ and this tool can detection to phone number but japan rule only
+ 
+ Because Holy shit I don't know about the phone number rules of all over the fucking world!!!!!!!
  
  
 
