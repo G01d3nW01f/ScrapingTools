@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup as bs4
 import datetime
 import logging
 
+
 class bcolors:
 
     BLUE = '\033[94m'
@@ -113,6 +114,10 @@ def args_take_off():
 
     targets = sys.argv[1]
     keyword = sys.argv[2]
+
+    reg = re.search(r".+/$",targets)
+    if reg != None:
+        targets = targets[:-1]
 
     return targets,keyword
 
@@ -259,3 +264,4 @@ def main():
 if __name__ == "__main__":
 
     main()
+
