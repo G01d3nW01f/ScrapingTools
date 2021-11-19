@@ -72,7 +72,7 @@
   Sniper mode is one target only
   But if you have list of targets, put the list_file on arguments
   
-  then this script will do in craster mode, let's enjoy as 1968 south vietnum
+  then this script will do in craster mode, let's screaming as back to the 1968's south vietnum
   
  ```
  killskill-picoctf@webshell:~/dev/grave_digger$ ./gdigger.py list.txt
