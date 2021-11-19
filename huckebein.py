@@ -115,7 +115,7 @@ def into_the_arena(target):
     
     for i in all_file_list:
 
-        f = open(i,"r")
+        f = open(i,"r",encoding="utf8",errors="ignore")
         soup = bs4(f,"html.parser")
         
         reg = re.search(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b",soup.text)
@@ -160,7 +160,9 @@ def into_the_arena(target):
         print(phone_or_fax_list)
 
     finalize_dir_name = report_manager(target)
-    
+   
+    os.system(f"touch {finalize_dir_name}_email_phone_FAX")
+    print(f"[+]make_the_file!")
     f = open(finalize_dir_name+"_email_phone_FAX","w")
     
     for i in email_address_list:
@@ -188,6 +190,10 @@ def targets_to_target(target):
 
 def report_manager(target):
     
+    reg = re.search(r".+/$",target)
+    if reg != None:
+        target = target[:-1]
+
     dir_name = "report_mail_and_phone_"+str(datetime.datetime.now()).replace(" ","").replace(":","").replace(".","")[9:]
     os.mkdir(dir_name)
     finalize_dir_name = dir_name+"/"+target+"_report"
@@ -208,3 +214,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
