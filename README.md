@@ -147,7 +147,7 @@
 ```
 
 This Script is wrote for generated clone file for targetting web sites.
-but if you can make more better clone, then please tell me, and give me, 
+but if you can make more better clone than grave digger, then please tell me, and give me, 
 ofcourse I will use it.
 
 by the way, any this tool find the keywords in every page and text,
