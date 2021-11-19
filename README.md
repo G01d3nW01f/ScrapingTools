@@ -199,7 +199,7 @@ by the way, any this tool find the keywords in every page and text,
  
  and this tool can detection to phone number too but japan rule only
  
- Because Holy shit I don't know about the phone number rules of all over the fucking world!!!!!!!
+ Because I don't know about the phone number rules of all over the fucking world!!!!!!!
  
  
 
