@@ -152,6 +152,7 @@ but if you can make more better clone than grave digger, then please tell me, an
 ofcourse I will use it.
 
 by the way, any this tool find the keywords in every page and text,
+of course except of html tag name
 
 
 
