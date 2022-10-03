@@ -75,7 +75,7 @@
   then this script will do in craster mode, let's screaming as back to the 1968's south vietnum
   
  ```
- killskill-picoctf@webshell:~/dev/grave_digger$ ./gdigger.py list.txt
+ ./gdigger.py list.txt
  
  ____  _____  ___  __ __ _____ _____ __  ____   ____  _____ _____
 (( ___ ||_// ||=|| \\ // ||==  ||  ) || (( ___ (( ___ ||==  ||_//
